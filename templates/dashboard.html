@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Reports Dashboard</h2>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Email</th>
+                <th>Title</th>
+                <th>Level</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for report in reports %}
+            <tr>
+                <td>{{ report.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                <td>{{ report.email }}</td>
+                <td>{{ report.title }}</td>
+                <td>{{ report.level }}</td>
+                <td>{{ report.type }}</td>
+                <td>{{ report.status }}</td>
+                <td>
+                    <a href="{{ url_for('view_report', id=report.id) }}" class="btn btn-sm btn-info">View</a>
+                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ report.id }}">
+                        Delete
+                    </button>
+
+                    <!-- Delete Modal -->
+                    <div class="modal fade" id="deleteModal{{ report.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ report.id }}" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteModalLabel{{ report.id }}">Confirm Delete</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure you want to delete this report?<br>
+                                    Title: {{ report.title }}<br>
+                                    Email: {{ report.email }}
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <form action="{{ url_for('delete_report', id=report.id) }}" method="POST" style="display: inline;">
+                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
